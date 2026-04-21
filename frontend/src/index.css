@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand Colors */
+  --color-brand-teal: #0D9488;
+  --color-brand-teal-deep: #0F766E;
+  --color-brand-mint: #A8E6CF;
+  --color-brand-yellow: #FFD93D;
+  --color-brand-coral: #FF6B6B;
+  --color-brand-cream: #FFF8E7;
+
+  /* Animation Overrides */
+  --animate-float-slow: float-slow 7s ease-in-out infinite;
+  --animate-float-med: float-med 5s ease-in-out infinite;
+  --animate-float-fast: float-fast 3.5s ease-in-out infinite;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;500;600;700;800&display=swap');
+
+/* --- Everything else (keyframes, body styles, etc.) stays below here --- */
+/* Keep all the other custom CSS (animations, etc.) below this... */
+
+/* ----------------------------- Custom Styles ----------------------------- */
+
+body {
+    margin: 0;
+    font-family: 'Nunito', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background: #FAFAFA;
+    color: #18181B;
+}
+
+h1, h2, h3, h4, h5, h6, .font-display {
+    font-family: 'Fredoka', 'Nunito', system-ui, sans-serif;
+    letter-spacing: -0.01em;
+}
+
+/* Floating animation for hero elements */
+@keyframes float-slow {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-16px) rotate(3deg); }
+}
+@keyframes float-med {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-24px) rotate(-4deg); }
+}
+@keyframes float-fast {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.animate-float-slow { animation: float-slow 7s ease-in-out infinite; }
+.animate-float-med   { animation: float-med 5s ease-in-out infinite; }
+.animate-float-fast  { animation: float-fast 3.5s ease-in-out infinite; }
+
+/* Decorative background blobs */
+.blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(48px);
+    opacity: 0.55;
+    pointer-events: none;
+}
+
+/* Speech bubble tail for Testimonials */
+.speech::after {
+    content: '';
+    position: absolute;
+    bottom: -14px;
+    left: 40px;
+    width: 28px;
+    height: 28px;
+    background: inherit;
+    border-bottom-left-radius: 22px;
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+
+/* Custom button press effect */
+.btn-press {
+    transition: transform .15s ease, box-shadow .15s ease, background-color .15s ease;
+}
+.btn-press:hover { transform: translateY(-2px); }
+.btn-press:active { transform: translateY(0); }
+
+html { scroll-behavior: smooth; }
+
+/* Infinite Marquee Animation */
+@keyframes infinite-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: infinite-scroll 40s linear infinite;
+  width: max-content;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
