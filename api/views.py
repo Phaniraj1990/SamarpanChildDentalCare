@@ -26,12 +26,10 @@ def clinic_info(request):
     return Response({
         "name": "Samarpan Child Dental Care",
         "doctor": "Dr Apexa P Yadav",
-        "phone": "070485 12696",
+        "phone": "07048512696",
         "address": "105, First Floor, Sundaram Residency, Dharmanagar Road, near Jyotinagar, Water tank, Bharuch, Gujarat 392012",
         "hours": {
-            "mon_sat": "10:00 AM - 1:30 PM, 4:00 PM - 7:00 PM",
-            "sunday": "By Appointment Only"
+            "mon_sat": "10:00 AM - 1:00 PM, 4:00 PM - 7:00 PM",
+            "sunday": "Holiday"
         },
     })
-
-# Create your views here.
