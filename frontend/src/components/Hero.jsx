@@ -51,7 +51,7 @@ export default function Hero() {
           >
             Samarpan Child Dental Care is a gentle, playful clinic in Bharuch made just for little
             teeth. Led by <strong className="text-zinc-800">Dr. Apexa P. Yadav</strong>, we turn every
-            dental visit into an adventure your child will actually look forward to.
+            dental visit into an amusement your child will actually look forward to.
           </motion.p>
 
           <motion.div
