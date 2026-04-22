@@ -33,17 +33,26 @@ export default function Contact() {
     
     setLoading(true);
     
-    // --- THE FIX ---
-    // Instead of calling a backend that doesn't exist yet, we simulate a 1.5-second 
-    // network delay so you can see your cool loading spinner, and then show success!
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      
-      console.log("Form data that will eventually be emailed:", form);
-      toast.success("Thanks! We'll call you back soon.");
-      setForm({ name: "", phone: "", email: "", child_age: "", message: "" });
+      // --- THE REAL INTERNET CONNECTION ---
+      // This sends the data directly to your live Render backend!
+      const response = await fetch("https://samarpanchilddentalcare.onrender.com/api/contact/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
+
+      if (response.ok) {
+        toast.success("Thanks! We'll call you back soon.");
+        setForm({ name: "", phone: "", email: "", child_age: "", message: "" });
+      } else {
+        toast.error("Something went wrong with the server.");
+      }
     } catch (err) {
-      toast.error("Something went wrong. Please try again.");
+      console.error(err);
+      toast.error("Network error. Please try again.");
     } finally {
       setLoading(false);
     }
