@@ -46,6 +46,24 @@ export default function Contact() {
 
       if (response.ok) {
         toast.success("Thanks! We'll call you back soon.");
+        
+        // --- THE NEW WHATSAPP REDIRECT ---
+        const clinicPhone = "917048512696"; 
+        
+        const waMessage = `Hello Samarpan Clinic! Here is a new website inquiry:
+        
+👤 Name: ${form.name}
+📱 Phone: ${form.phone}
+👶 Child's Age: ${form.child_age || "Not provided"}
+💬 Message: ${form.message}`;
+
+        const waLink = `https://wa.me/${clinicPhone}?text=${encodeURIComponent(waMessage)}`;
+        
+        // Open WhatsApp in a new tab
+        window.open(waLink, '_blank');
+        // ----------------------------------
+
+        // Clear the form
         setForm({ name: "", phone: "", email: "", child_age: "", message: "" });
       } else {
         toast.error("Something went wrong with the server.");
