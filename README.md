@@ -52,4 +52,4 @@ If you wish to run this project locally, follow these steps:
 3. Start the development server: `npm run dev`
 
 ---
-*Developed by [Your Name/GitHub Profile]*
+*Developed by [Phaniraj KJ]*
