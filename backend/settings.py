@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 import dj_database_url
 from pathlib import Path
+import os  
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +21,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-#@x*lp*nj(sg@50-0=lbpc(2&=e#y!mln$i-%%pcd2k@#z7g*t"
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-local-dev-key')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# Automatically turn off Debug when pushed to Render
+DEBUG = 'RENDER' not in os.environ
 
-ALLOWED_HOSTS = ['*']
+# Only allow traffic from your Render server and your local machine
+ALLOWED_HOSTS = ['samarpanchilddentalcare.onrender.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -77,8 +79,7 @@ WSGI_APPLICATION = "backend.wsgi.application"
 
 DATABASES = {
     'default': dj_database_url.config(
-        # Paste your real Neon link inside these quotes!
-        default='postgresql://neondb_owner:npg_xvtKS2ogaAH4@ep-orange-forest-ansivrbp-pooler.c-6.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require',
+        default=os.environ.get('DATABASE_URL'),
         conn_max_age=600
     )
 }
@@ -132,5 +133,10 @@ INSTALLED_APPS += [
 # 2. Add CORS Middleware to the TOP of the middleware list
 MIDDLEWARE.insert(0, 'corsheaders.middleware.CorsMiddleware')
 
-# 3. Allow React to talk to Django
-CORS_ALLOW_ALL_ORIGINS = True
+
+# 3. Restrict API access to ONLY your Netlify site
+CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOWED_ORIGINS = [
+    "https://samarpanchilddentalcare.netlify.app",
+    "http://localhost:5173", 
+]
