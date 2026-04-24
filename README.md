@@ -14,7 +14,6 @@ This project utilizes a Headless/Decoupled architecture, separating the client-s
 **Backend (API & Logic)**
 * **Framework:** Python / Django
 * **API Architecture:** Django REST Framework (DRF)
-* **AI Integration:** Google Gemini API (Generative AI)
 * **Hosting / CI/CD:** Render
 
 **Database**
