@@ -1,6 +1,6 @@
 # Samarpan Child Dental Care - Full Stack Application 🦷
 
-A modern, decoupled web application built for a pediatric dental clinic. This project features a lightning-fast frontend UI, a secure relational database, and an integrated AI assistant to help parents with common dental queries.
+A modern, decoupled web application built for a pediatric dental clinic. This project features a lightning-fast frontend UI, a secure relational database.
 
 ## 🚀 Architecture & Tech Stack
 
