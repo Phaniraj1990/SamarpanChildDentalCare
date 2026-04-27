@@ -1,33 +1,21 @@
+// Notice: ZERO import statements at the top!
 
-// 1. Import your local images at the very top
-import photo2 from "../assets/Doctor3.jpg";     //your child's friendly dr
-import photo3 from "../assets/patient1.jpeg";  // smile transformation
-import photo4 from "../assets/patient2.jpeg";  // Injection
-import photo5 from "../assets/patient3.jpeg";  // litte stars
-import photo6 from "../assets/patient4.jpeg";  // brave smile
-import photo7 from "../assets/patient5.jpeg";  // first visit
-import photo8 from "../assets/clinic1.jpeg";   // happy zone
-
-
-const images = [
-  photo2, // Use the imported image variable
-  photo8, // Use the imported image variable
-  photo7, // Use the imported image variable
-  photo3, // Use the imported image variable
-  photo6, // Use the imported image variable
-  photo5, // Use the imported image variable
-  photo4, // Use the imported image variable
-  
-  
-  
-
+// 1. Create one clean list linking the file name to the caption
+const galleryData = [
+  { file: "/gallery/Doctor3.jpg", caption: "Your Child's Friendly Dr.!" },
+  { file: "/gallery/clinic1.jpeg", caption: "Happy Zone😊" },
+  { file: "/gallery/patient5.jpeg", caption: "First visit!" },
+  { file: "/gallery/patient1.jpeg", caption: "Smile Transformation✨" },
+  { file: "/gallery/patient4.jpeg", caption: "Brave smile ✦" },
+  { file: "/gallery/patient3.jpeg", caption: "Little stars" },
+  { file: "/gallery/patient2.jpeg", caption: "Painless Injection" },
+  { file: "/gallery/Confidence Boost.jpeg", caption: "Confidence Boost!" },
+  // Just keep adding your remaining 11 photos exactly like this!
+  // { file: "/gallery/your_photo.jpg", caption: "Your new caption" },
 ];
 
-const captions = ["Your Child's Friendly Dr.!", "Happy Zone😊", "First visit!", "Smile Transformation✨", "Brave smile ✦", "Little stars", "Painless Injection"];
-
-// We duplicate the lists so the animation can loop perfectly without a gap
-const duplicatedImages = [...images, ...images];
-const duplicatedCaptions = [...captions, ...captions];
+// 2. Duplicate the single list for the infinite marquee scroll
+const duplicatedGallery = [...galleryData, ...galleryData];
 
 export default function Gallery() {
   return (
@@ -57,17 +45,20 @@ export default function Gallery() {
 
         {/* The Animated Track */}
         <div className="animate-marquee flex gap-6 px-3 cursor-pointer py-4">
-          {duplicatedImages.map((src, i) => (
+          
+          {/* 3. Map over our new combined object list */}
+          {duplicatedGallery.map((item, i) => (
             <figure
               key={i}
               className="relative w-[280px] sm:w-[340px] aspect-[4/5] rounded-[2rem] overflow-hidden ring-4 ring-white shadow-xl shrink-0 transition-transform duration-300 hover:scale-[1.02]"
             >
-              <img src={src} alt={duplicatedCaptions[i]} className="w-full h-full object-cover" />
+              <img src={item.file} alt={item.caption} className="w-full h-full object-cover" />
               <figcaption className="absolute bottom-4 left-4 px-4 py-2 rounded-full bg-white/95 text-sm font-bold text-zinc-900 shadow">
-                {duplicatedCaptions[i]}
+                {item.caption}
               </figcaption>
             </figure>
           ))}
+
         </div>
       </div>
     </section>
