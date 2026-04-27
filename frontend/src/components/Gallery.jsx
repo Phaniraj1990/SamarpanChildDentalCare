@@ -1,6 +1,5 @@
-// Notice: ZERO import statements at the top!
+import { useState } from "react";
 
-// 1. Create one clean list linking the file name to the caption
 const galleryData = [
   { file: "/gallery/Doctor3.jpg", caption: "Your Child's Friendly Dr.!" },
   { file: "/gallery/clinic1.jpeg", caption: "Happy Zone😊" },
@@ -22,16 +21,19 @@ const galleryData = [
   { file: "/gallery/Happy Teeth.jpeg", caption: "Happy Teeth ✨" },
   { file: "/gallery/Smile Revival.jpeg", caption: "Smile Revival ✨" },
   { file: "/gallery/Teeth Renewal.jpeg", caption: "Teeth Renewal ✨" },
-  // Just keep adding your remaining 11 photos exactly like this!
-  // { file: "/gallery/your_photo.jpg", caption: "Your new caption" },
+  // Add remaining photos here
 ];
 
-// 2. Duplicate the single list for the infinite marquee scroll
 const duplicatedGallery = [...galleryData, ...galleryData];
 
 export default function Gallery() {
+  const [selectedImage, setSelectedImage] = useState(null);
+  
+  // 1. New State to control the pausing manually across all devices
+  const [isPaused, setIsPaused] = useState(false);
+
   return (
-    <section id="gallery" data-testid="gallery-section" className="py-24 sm:py-32 bg-white">
+    <section id="gallery" data-testid="gallery-section" className="py-24 sm:py-32 bg-white relative">
       <div className="max-w-7xl mx-auto px-5 sm:px-8 mb-14">
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <div>
@@ -49,20 +51,27 @@ export default function Gallery() {
         </div>
       </div>
 
-      {/* The Crash-Proof Marquee Container */}
       <div className="relative overflow-hidden">
-        {/* Left and Right White Fade Gradients */}
         <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-white to-transparent z-10" />
         <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-white to-transparent z-10" />
 
-        {/* The Animated Track */}
-        <div className="animate-marquee flex gap-6 px-3 cursor-pointer py-4">
-          
-          {/* 3. Map over our new combined object list */}
+        {/* 2. Removed the Tailwind hover class and added React Event Listeners */}
+        <div 
+          className="animate-marquee flex gap-6 px-3 py-4"
+          onMouseEnter={() => setIsPaused(true)}     // Laptops: Mouse enters
+          onMouseLeave={() => setIsPaused(false)}    // Laptops: Mouse leaves
+          onTouchStart={() => setIsPaused(true)}     // Phones: Finger touches screen
+          onTouchEnd={() => setIsPaused(false)}      // Phones: Finger lifts off screen
+          style={{ 
+            animationDuration: "50s",
+            animationPlayState: isPaused ? "paused" : "running" // Dynamic pause control
+          }}
+        >
           {duplicatedGallery.map((item, i) => (
             <figure
               key={i}
-              className="relative w-[280px] sm:w-[340px] aspect-[4/5] rounded-[2rem] overflow-hidden ring-4 ring-white shadow-xl shrink-0 transition-transform duration-300 hover:scale-[1.02]"
+              onClick={() => setSelectedImage(item)}
+              className="relative w-[280px] sm:w-[340px] aspect-[4/5] rounded-[2rem] overflow-hidden ring-4 ring-white shadow-xl shrink-0 transition-transform duration-300 cursor-pointer"
             >
               <img src={item.file} alt={item.caption} className="w-full h-full object-cover" />
               <figcaption className="absolute bottom-4 left-4 px-4 py-2 rounded-full bg-white/95 text-sm font-bold text-zinc-900 shadow">
@@ -70,9 +79,37 @@ export default function Gallery() {
               </figcaption>
             </figure>
           ))}
-
         </div>
       </div>
+
+      {/* The Modal (Lightbox) Overlay remains exactly the same */}
+      {selectedImage && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-sm p-4 cursor-zoom-out transition-opacity"
+          onClick={() => setSelectedImage(null)} 
+        >
+          <div 
+            className="relative max-w-4xl max-h-screen cursor-auto"
+            onClick={(e) => e.stopPropagation()} 
+          >
+            <button 
+              onClick={() => setSelectedImage(null)}
+              className="absolute -top-12 right-0 text-white hover:text-[#FF6B6B] text-4xl transition-colors"
+            >
+              &times;
+            </button>
+            
+            <img 
+              src={selectedImage.file} 
+              alt={selectedImage.caption} 
+              className="max-w-full max-h-[80vh] rounded-2xl shadow-2xl object-contain"
+            />
+            <p className="text-center text-white text-xl mt-6 font-bold tracking-wide">
+              {selectedImage.caption}
+            </p>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
