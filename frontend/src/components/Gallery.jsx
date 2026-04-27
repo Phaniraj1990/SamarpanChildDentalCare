@@ -109,8 +109,9 @@ export default function Gallery() {
       </div>
 
       <div className="relative overflow-hidden">
-        <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-white to-transparent z-10" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-white to-transparent z-10" />
+        {/* Updated: Thinner (w-6) and softer (from-white/70) on mobile, but wide and solid on laptops (sm:w-24 sm:from-white) */}
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-6 sm:w-24 bg-gradient-to-r from-white/70 sm:from-white to-transparent z-10" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-6 sm:w-24 bg-gradient-to-l from-white/70 sm:from-white to-transparent z-10" />
 
         {/* 3. Added the new mouse event listeners here */}
         <div 
