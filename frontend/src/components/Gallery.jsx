@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const galleryData = [
   { file: "/gallery/Doctor3.jpg", caption: "Your Child's Friendly Dr.!" },
@@ -21,16 +21,73 @@ const galleryData = [
   { file: "/gallery/Happy Teeth.jpeg", caption: "Happy Teeth ✨" },
   { file: "/gallery/Smile Revival.jpeg", caption: "Smile Revival ✨" },
   { file: "/gallery/Teeth Renewal.jpeg", caption: "Teeth Renewal ✨" },
-  // Add remaining photos here
+
+  // Add your remaining photos here
 ];
 
-const duplicatedGallery = [...galleryData, ...galleryData];
+const duplicatedGallery = [...galleryData, ...galleryData, ...galleryData];
 
 export default function Gallery() {
   const [selectedImage, setSelectedImage] = useState(null);
-  
-  // 1. New State to control the pausing manually across all devices
   const [isPaused, setIsPaused] = useState(false);
+  
+  const scrollRef = useRef(null);
+  
+  // 1. New Trackers for Laptop Mouse Dragging
+  const isDragging = useRef(false);
+  const startX = useRef(0);
+  const scrollLeft = useRef(0);
+
+  // The JavaScript Auto-Scroll Engine
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    let animationId;
+
+    const autoScroll = () => {
+      if (!isPaused && !isDragging.current) {
+        container.scrollLeft += 1; 
+        
+        if (container.scrollLeft >= container.scrollWidth / 3) {
+          container.scrollLeft = 0;
+        }
+      }
+      animationId = requestAnimationFrame(autoScroll);
+    };
+
+    animationId = requestAnimationFrame(autoScroll);
+    return () => cancelAnimationFrame(animationId);
+  }, [isPaused]);
+
+  // 2. Mouse Drag Functions
+  const handleMouseDown = (e) => {
+    isDragging.current = true;
+    // Record where the mouse clicked and where the scrollbar currently is
+    startX.current = e.pageX - scrollRef.current.offsetLeft;
+    scrollLeft.current = scrollRef.current.scrollLeft;
+  };
+
+  const handleMouseLeave = () => {
+    isDragging.current = false;
+    setIsPaused(false); // Resume auto-scroll if mouse leaves the area
+  };
+
+  const handleMouseUp = () => {
+    isDragging.current = false;
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging.current) return;
+    e.preventDefault(); // Stop text/images from highlighting while dragging
+    
+    // Calculate how far the mouse has moved
+    const x = e.pageX - scrollRef.current.offsetLeft;
+    const walk = (x - startX.current) * 1.5; // Multiply by 1.5 to drag slightly faster
+    
+    // Move the scrollbar to follow the mouse
+    scrollRef.current.scrollLeft = scrollLeft.current - walk;
+  };
 
   return (
     <section id="gallery" data-testid="gallery-section" className="py-24 sm:py-32 bg-white relative">
@@ -55,25 +112,26 @@ export default function Gallery() {
         <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-white to-transparent z-10" />
         <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-white to-transparent z-10" />
 
-        {/* 2. Removed the Tailwind hover class and added React Event Listeners */}
+        {/* 3. Added the new mouse event listeners here */}
         <div 
-          className="animate-marquee flex gap-6 px-3 py-4"
-          onMouseEnter={() => setIsPaused(true)}     // Laptops: Mouse enters
-          onMouseLeave={() => setIsPaused(false)}    // Laptops: Mouse leaves
-          onTouchStart={() => setIsPaused(true)}     // Phones: Finger touches screen
-          onTouchEnd={() => setIsPaused(false)}      // Phones: Finger lifts off screen
-          style={{ 
-            animationDuration: "80s",
-            animationPlayState: isPaused ? "paused" : "running" // Dynamic pause control
-          }}
+          ref={scrollRef}
+          className="flex gap-6 px-3 py-4 overflow-x-auto touch-pan-x cursor-grab active:cursor-grabbing [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+          onMouseEnter={() => setIsPaused(true)}
+          onTouchStart={() => setIsPaused(true)}
+          onTouchEnd={() => setIsPaused(false)}
+          onMouseDown={handleMouseDown}
+          onMouseLeave={handleMouseLeave}
+          onMouseUp={handleMouseUp}
+          onMouseMove={handleMouseMove}
         >
           {duplicatedGallery.map((item, i) => (
             <figure
               key={i}
               onClick={() => setSelectedImage(item)}
-              className="relative w-[280px] sm:w-[340px] aspect-[4/5] rounded-[2rem] overflow-hidden ring-4 ring-white shadow-xl shrink-0 transition-transform duration-300 cursor-pointer"
+              className="relative w-[280px] sm:w-[340px] aspect-[4/5] rounded-[2rem] overflow-hidden ring-4 ring-white shadow-xl shrink-0 transition-transform duration-300 hover:scale-[1.02]"
             >
-              <img src={item.file} alt={item.caption} className="w-full h-full object-cover" />
+              {/* Added draggable="false" to prevent ghost-image dragging bugs */}
+              <img src={item.file} alt={item.caption} draggable="false" className="w-full h-full object-cover select-none pointer-events-none" />
               <figcaption className="absolute bottom-4 left-4 px-4 py-2 rounded-full bg-white/95 text-sm font-bold text-zinc-900 shadow">
                 {item.caption}
               </figcaption>
@@ -82,7 +140,6 @@ export default function Gallery() {
         </div>
       </div>
 
-      {/* The Modal (Lightbox) Overlay remains exactly the same */}
       {selectedImage && (
         <div 
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-sm p-4 cursor-zoom-out transition-opacity"
@@ -98,7 +155,6 @@ export default function Gallery() {
             >
               &times;
             </button>
-            
             <img 
               src={selectedImage.file} 
               alt={selectedImage.caption} 
