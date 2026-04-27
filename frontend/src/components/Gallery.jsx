@@ -63,7 +63,7 @@ export default function Gallery() {
           onTouchStart={() => setIsPaused(true)}     // Phones: Finger touches screen
           onTouchEnd={() => setIsPaused(false)}      // Phones: Finger lifts off screen
           style={{ 
-            animationDuration: "50s",
+            animationDuration: "80s",
             animationPlayState: isPaused ? "paused" : "running" // Dynamic pause control
           }}
         >
